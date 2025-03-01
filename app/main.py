@@ -11,7 +11,6 @@ from . import models
 from .database import engine, get_db
 
 models.Base.metadata.create_all(bind=engine)
-
 app = FastAPI()
 
 class Post(BaseModel):
@@ -46,7 +45,10 @@ def find_index_post(id):
 
 @app.get("/sqlalchemy")
 def test_posts(db:Session = Depends(get_db)):
-    return{"status":"success"}
+
+    posts = db.query(models.Post)
+    print(posts)
+    return{"data":"successfull"}
 
 
 
