@@ -46,16 +46,17 @@ def find_index_post(id):
 @app.get("/sqlalchemy")
 def test_posts(db:Session = Depends(get_db)):
 
-    posts = db.query(models.Post)
+    posts = db.query(models.Post).all()
     print(posts)
     return{"data":"successfull"}
 
 
 
 @app.get("/posts")
-def get_posts():
-    cursor.execute("""SELECT * FROM posts""")
-    posts = cursor.fetchall()
+def get_posts(db:Session = Depends(get_db)):
+    # cursor.execute("""SELECT * FROM posts""")
+    # posts = cursor.fetchall()
+    posts = db.query(models.Post).all()
     return {"data": posts}
 
 @app.get("/")
@@ -63,13 +64,13 @@ def root():
     return {"message": "Hello World"}
 
 @app.post("/posts",status_code=status.HTTP_201_CREATED) 
-def create_posts(post:Post):
-         cursor.execute("""INSERT INTO posts (title,content,published) VALUES (%s,%s,%s)RETURNING * """,
-         (post.title,post.content,post.published))
-         new_post = cursor.fetchone()
-         conn.commit()
- 
-         return{"data":new_post}
+def create_posts(post:Post,db:Session = Depends(get_db)):
+        #  cursor.execute("""INSERT INTO posts (title,content,published) VALUES (%s,%s,%s)RETURNING * """,
+        #  (post.title,post.content,post.published))
+        #  new_post = cursor.fetchone()
+        #  conn.commit()
+        new_post = models.Post(title=post.title,content=post.content,published=post.published)
+        return{"data":new_post}
    
 
 @app.get("/posts/{id}")
