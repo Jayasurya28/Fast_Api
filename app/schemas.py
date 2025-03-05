@@ -11,7 +11,7 @@ class UserOut(BaseModel):
     email: EmailStr
     created_at: datetime
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 class PostBase(BaseModel):
     title: str 
@@ -28,7 +28,7 @@ class Post(PostBase):
     owner: UserOut
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 class UserLogin(BaseModel):
     email: EmailStr
