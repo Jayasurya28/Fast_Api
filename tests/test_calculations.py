@@ -1,6 +1,15 @@
 import pytest
 from app.calculations import add,subtract,multiply,divide,BankAccount
 
+@pytest.fixture
+def zero_bank_account():
+    print("creating empty bank account")
+    return BankAccount()
+
+@pytest.fixture
+def bank_account():
+    return BankAccount(50)
+
 
 @pytest.mark.parametrize("num1,num2,expected",[
     (5,3,8),
@@ -25,9 +34,9 @@ def test_bank_set_initial_amount():
     bank_account = BankAccount(50)
     assert bank_account.balance == 50
 
-def test_bank_default_amount():
-    bank_account = BankAccount()
-    assert bank_account.balance  == 0
+def test_bank_default_amount(zero_bank_account):
+    print("testing my bank account")
+    assert zero_bank_account.balance  == 0
 
 def test_withdraw():
     bank_account = BankAccount(50)
