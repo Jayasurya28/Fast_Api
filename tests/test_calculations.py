@@ -1,19 +1,24 @@
+import pytest
 from app.calculations import add,subtract,multiply,divide
 
-def test_add():
-    print("testing add function")
-    assert add(5,3) == 8
+
+@pytest.mark.parametrize("num1,num2,expected",[
+    (5,3,8),
+    (9,4,13),
+    (5,3,8),
+    (9,3,12)
+])
+
+def test_add(num1,num2,expected):
+    assert add(num1,num2) == expected
 
 def test_subtract():
-    print("testing subtract function")
     assert subtract(9,4) == 5
 
 def test_multiply():
-    print("testing multiply function")
     assert multiply(5,3) == 15
 
 def test_divide():
-    print("testing divide function")
     assert divide(9,3) == 3
 
 
