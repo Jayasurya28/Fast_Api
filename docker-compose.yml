@@ -1,12 +1,17 @@
-version: '3'
+version: "3"
 
 services:
   api:  
       build: .
+      depends_on:
+        - postgres
       ports:
         - 8000:8000
-      # env_file:
-      #   - ./.env
+      volumes:
+          - ./:/usr/src/app:ro
+      command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+      env_file:
+        - ./.env
       environment:
         DATABASE_HOSTNAME: postgres
         DATABASE_PORT: 5432
