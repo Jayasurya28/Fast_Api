@@ -26,7 +26,8 @@ class BankAccount:
 
     def withdraw(self,amount):
         if amount > self.balance:
-            raise InsufficientFunds("Insufficient funds in account")
+        #     raise InsufficientFunds("Insufficient funds in account")
+            raise ZeroDivisionError()
         self.balance -= amount
     
     def collect_interest(self):
