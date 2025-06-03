@@ -1,12 +1,21 @@
-FROM python:3.9.21
+# Use a lightweight Python image
+FROM python:3.10
 
-WORKDIR /usr/src/app
+# Set working directory
+WORKDIR /app
 
-COPY requirements.txt ./
+# Copy application files
+COPY . /app
 
-RUN pip install --no-cache-dir -r requirements.txt
+# Install dependencies
+RUN pip install --no-cache-dir --upgrade pip && \
+    pip install --no-cache-dir -r requirements.txt
 
-COPY . .
+# Expose port 8080
+EXPOSE 8080
 
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+# Set Python path
+ENV PYTHONPATH=/app
 
+# Start FastAPI with Uvicorn
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8080", "--reload"]

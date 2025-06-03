@@ -1,33 +1,37 @@
+version: '3.8'
 services:
-  api:  
-      build: .
-      depends_on:
-        - postgres
-      ports:
-        - 8000:8000
-      volumes:
-          - ./:/usr/src/app:ro
-      command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
-      # env_file:
-      #   - ./.env
-      environment:
-        DATABASE_HOSTNAME: postgres
-        DATABASE_PORT: 5432
-        DATABASE_PASSWORD: password
-        DATABASE_NAME: fastapi
-        DATABASE_USERNAME: postgres
-        SECRET_KEY: "09d25e094faa6ca2556c818166b7a9563b93f7099f6f0f4caa6cf63b88e8d3e7"
-        ALGORITHM: HS256
-        ACCESS_TOKEN_EXPIRE_MINUTES: 30
-  
-  postgres:
-    image: postgres
-    environment:
-      POSTGRES_PASSWORD: password
-      POSTGRES_DB: fastapi
-
+  api:
+    build: .
+    ports:
+      - "3000:3000"
     volumes:
-      - postgres_db:/var/lib/postgresql/data
+      - .:/app
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/fastapi_db
+    depends_on:
+      - postgres
+    command: uvicorn app.main:app --host 0.0.0.0 --port 3000 --reload
+    develop:
+      watch:
+        - action: sync
+          path: ./app
+          target: /app/app
+          ignore:
+            - __pycache__/
+            - "*.pyc"
+        - action: rebuild
+          path: requirements.txt
+
+  postgres:
+    image: postgres:13
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=fastapi_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
 
 volumes:
-  postgres_db:
+  postgres_data:
